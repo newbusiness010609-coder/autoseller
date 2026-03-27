@@ -1,7 +1,17 @@
 const express = require("express");
 const app = express();
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  next();
+});
+
 app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Server running 🚀");
+});
 
 app.post("/generate", async (req, res) => {
   try {
@@ -13,13 +23,15 @@ app.post("/generate", async (req, res) => {
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
-        input: "Create a Vinted product listing with title, description and price in euros."
+        input: "Create a product listing with title, description and price."
       })
     });
 
     const data = await response.json();
 
-    res.json({ result: data.output[0].content[0].text });
+    const text = data.output?.[0]?.content?.[0]?.text || "No response";
+
+    res.json({ result: text });
 
   } catch (err) {
     res.json({ error: "Server error" });
@@ -27,5 +39,5 @@ app.post("/generate", async (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log("Server running on port 3000");
+  console.log("Server running");
 });
