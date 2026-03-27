@@ -1,52 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>AutoSeller</title>
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      padding: 40px;
-      background: #111;
-      color: white;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      background: white;
-      color: black;
-      border-radius: 5px;
-    }
-    input {
-      margin: 10px;
-    }
-  </style>
-</head>
-<body>
+<script>
+async function generate() {
+  const res = await fetch("https://autoseller-b.onrender.com/generate", {
+    method: "POST"
+  });
 
-  <h1>Sell Anything in Seconds</h1>
+  const data = await res.json();
+  const text = data.choices[0].message.content;
 
-  <input type="file" id="image"><br><br>
-
-  <button onclick="generate()">Generate Listing</button>
-
-  <h2 id="title"></h2>
-  <p id="desc"></p>
-  <p id="price"></p>
-
-  <script>
-    function generate() {
-      const prompt = "Create a Vinted/eBay listing with title, description and price in euros for this item.";
-      
-      navigator.clipboard.writeText(prompt);
-
-      document.getElementById("title").innerText = "Prompt copied!";
-      document.getElementById("desc").innerText = "Paste it into ChatGPT with your image.";
-      document.getElementById("price").innerText = "";
-    }
-  </script>
-
-</body>
-</html>
+  document.getElementById("title").innerText = text;
+}
+</script>
