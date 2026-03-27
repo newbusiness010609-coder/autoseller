@@ -9,8 +9,12 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
+const path = require("path");
+
+app.use(express.static(path.join(__dirname)));
+
 app.get("/", (req, res) => {
-  res.send("Server running 🚀");
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.post("/generate", async (req, res) => {
