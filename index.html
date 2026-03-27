@@ -1,12 +1,57 @@
-<script>
-async function generate() {
-  const res = await fetch("https://autoseller-b.onrender.com/generate", {
-    method: "POST"
-  });
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AutoSeller</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      padding: 40px;
+      background: #111;
+      color: white;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background: white;
+      color: black;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
 
-  const data = await res.json();
-  const text = data.choices[0].message.content;
+  <h1>AutoSeller AI</h1>
+  <p>Generate product listings instantly</p>
 
-  document.getElementById("title").innerText = text;
-}
-</script>
+  <button onclick="generate()">Generate Listing</button>
+
+  <p id="title"></p>
+
+  <script>
+  async function generate() {
+    try {
+      const res = await fetch("https://autoseller-b.onrender.com/generate", {
+        method: "POST"
+      });
+
+      const data = await res.json();
+
+      if (data.choices) {
+        document.getElementById("title").innerText =
+          data.choices[0].message.content;
+      } else {
+        document.getElementById("title").innerText =
+          "Error: " + JSON.stringify(data);
+      }
+
+    } catch (err) {
+      document.getElementById("title").innerText = "Request failed";
+    }
+  }
+  </script>
+
+</body>
+</html>
