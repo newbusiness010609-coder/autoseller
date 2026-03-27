@@ -1,15 +1,11 @@
 const express = require("express");
-const fetch = require("node-fetch");
-const cors = require("cors");
-
 const app = express();
 
-app.use(cors());
 app.use(express.json());
 
 app.post("/generate", async (req, res) => {
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
@@ -17,26 +13,19 @@ app.post("/generate", async (req, res) => {
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: "You are an expert reseller. Return Title, Description, Price."
-          },
-          {
-            role: "user",
-            content: "Generate a product listing"
-          }
-        ]
+        input: "Create a Vinted product listing with title, description and price in euros."
       })
     });
 
     const data = await response.json();
-    res.json(data);
+
+    res.json({ result: data.output[0].content[0].text });
 
   } catch (err) {
-    res.status(500).json({ error: "Error generating listing" });
+    res.json({ error: "Server error" });
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server running"));
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
