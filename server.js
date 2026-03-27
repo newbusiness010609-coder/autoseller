@@ -33,7 +33,10 @@ app.post("/generate", async (req, res) => {
 
     const data = await response.json();
 
-    const text = data.output?.[0]?.content?.[0]?.text || "No response";
+   const text =
+  data.output?.[0]?.content?.[0]?.text ||
+  data.output_text ||
+  JSON.stringify(data);
 
     res.json({ result: text });
 
