@@ -1,28 +1,25 @@
-const express = require("express");
-const multer = require("multer");
+import express from "express";
+import multer from "multer";
+import fetch from "node-fetch";
+import cors from "cors";
 
 const app = express();
 const upload = multer();
 
-app.use(express.static(".")); // serve frontend
-
-// CORS fix
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "*");
-  next();
-});
+app.use(cors());
+app.use(express.json());
 
 app.post("/analyze", upload.single("image"), async (req, res) => {
   try {
     const instructions = req.body.instructions || "Title, Description, Price";
+
     const imageBuffer = req.file.buffer;
     const base64Image = imageBuffer.toString("base64");
 
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
-        "Authorization": "Bearer ${process.env.OPENAI_API_KEY}`,
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
@@ -50,16 +47,20 @@ Be structured, clean, and professional.`
 
     const data = await response.json();
 
-    const text =
-      data.output?.[0]?.content?.[0]?.text ||
-      data.output_text ||
-      "No response";
+    res.json({
+      result: data.output?.[0]?.content?.[0]?.text || "No response"
+    });
 
-    res.json({ result: text });
-
-  } catch (err) {
-    res.json({ result: "Something went wrong." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-app.listen(3000, () => console.log("Server running 🚀"));
+app.get("/", (req, res) => {
+  res.send("Server running 🚀");
+});
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
