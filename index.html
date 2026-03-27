@@ -5,31 +5,39 @@
   <style>
     body {
       font-family: Arial;
+      background: linear-gradient(135deg, #eef2f3, #dfe9f3);
       text-align: center;
-      padding: 60px;
-      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-      color: #111;
+      padding: 40px;
+      color: #222;
     }
 
     h1 {
-      font-size: 40px;
+      font-size: 42px;
       margin-bottom: 10px;
     }
 
     p {
-      font-size: 18px;
       margin-bottom: 30px;
+      color: #555;
+    }
+
+    input, textarea {
+      width: 60%;
+      padding: 12px;
+      margin: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
     }
 
     button {
       padding: 15px 30px;
       font-size: 18px;
-      cursor: pointer;
       border: none;
       background: #111;
       color: white;
-      border-radius: 8px;
-      transition: 0.2s;
+      border-radius: 10px;
+      cursor: pointer;
     }
 
     button:hover {
@@ -37,51 +45,63 @@
     }
 
     #result {
-      margin-top: 40px;
-      padding: 20px;
+      margin-top: 30px;
       background: white;
+      padding: 20px;
       border-radius: 10px;
       width: 60%;
       margin-left: auto;
       margin-right: auto;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
       white-space: pre-line;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
 
-  <h1>AutoSeller AI</h1>
-  <p>Generate powerful product listings instantly</p>
+<h1>AutoSeller AI</h1>
+<p>Upload image → get structured listing</p>
 
-  <button onclick="generate()">Generate Listing</button>
+<input type="file" id="image">
+<br>
 
-  <div id="result">Your AI result will appear here...</div>
+<textarea id="instructions" rows="5" placeholder="Write categories (e.g. Title, Description, Price, Target Audience...)"></textarea>
+<br>
 
-  <script>
-    async function generate() {
-      document.getElementById("result").innerText = "Generating...";
+<button onclick="send()">Analyze</button>
 
-      try {
-        const res = await fetch("https://autoseller-b.onrender.com/generate", {
-          method: "POST"
-        });
+<div id="result">Result will appear here...</div>
 
-        const data = await res.json();
+<script>
+async function send() {
+  const file = document.getElementById("image").files[0];
+  const instructions = document.getElementById("instructions").value;
 
-        if (data.choices) {
-          document.getElementById("result").innerText =
-            data.choices[0].message.content;
-        } else {
-          document.getElementById("result").innerText =
-            "Error: " + JSON.stringify(data);
-        }
+  if (!file) {
+    document.getElementById("result").innerText = "Please upload an image.";
+    return;
+  }
 
-      } catch (err) {
-        document.getElementById("result").innerText = "Request failed";
-      }
-    }
-  </script>
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("instructions", instructions);
+
+  document.getElementById("result").innerText = "Analyzing...";
+
+  try {
+    const res = await fetch("/analyze", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+    document.getElementById("result").innerText = data.result;
+
+  } catch (err) {
+    document.getElementById("result").innerText = "Something went wrong.";
+  }
+}
+</script>
 
 </body>
 </html>
