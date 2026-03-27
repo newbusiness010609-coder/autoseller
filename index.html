@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AutoSeller</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      padding: 40px;
+      background: #111;
+      color: white;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Sell Anything in Seconds</h1>
+
+  <input type="file"><br><br>
+
+  <button onclick="generate()">Generate Listing</button>
+
+  <h2 id="title"></h2>
+  <p id="desc"></p>
+  <p id="price"></p>
+
+  <script>
+    function generate() {
+      document.getElementById("title").innerText = "Black Hoodie - Great Condition";
+      document.getElementById("desc").innerText = "Comfortable black hoodie, lightly used, perfect for everyday wear.";
+      document.getElementById("price").innerText = "25€";
+    }
+  </script>
+
+</body>
+</html>
