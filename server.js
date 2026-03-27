@@ -22,7 +22,7 @@ app.post("/analyze", upload.single("image"), async (req, res) => {
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Authorization": `Bearer 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`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
