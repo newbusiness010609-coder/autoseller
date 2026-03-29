@@ -10,14 +10,14 @@ app.use(express.json());
 app.post("/analyze", upload.single("image"), async (req, res) => {
   try {
     if (!process.env.OPENAI_API_KEY) {
-      return res.json({ result: "❌ API key not set in Render." });
+      return res.json({ result: "❌ API key missing." });
     }
 
     if (!req.file) {
       return res.json({ result: "❌ Please upload an image." });
     }
 
-    const instructions = req.body.instructions || "Title, Description, Price";
+    const instructions = req.body.instructions || "";
     const base64Image = req.file.buffer.toString("base64");
 
     const response = await fetch("https://api.openai.com/v1/responses", {
@@ -34,17 +34,30 @@ app.post("/analyze", upload.single("image"), async (req, res) => {
             content: [
               {
                 type: "input_text",
-                text: `You are an expert e-commerce seller.
+                text: `You are a top-tier e-commerce expert.
 
-Analyze this image and respond ONLY using these categories:
+Analyze the product image and generate:
+- Title
+- Description
+- Estimated Price Range (EUR)
+- Target Audience
+- Marketing Angle
 
-${instructions}
+Then give scores (/10) for:
+- Demand
+- Profit Potential
+- Competition
+- Virality Potential
 
-Make it clean, structured, and persuasive.`
+Finally, suggest improvements or missing info that would help sell better. Ask follow-up questions ONLY if useful.
+
+Be natural, insightful, and non-robotic.
+
+${instructions}`
               },
               {
                 type: "input_image",
-                image_base64: base64Image
+                image_url: `data:image/jpeg;base64,${base64Image}`
               }
             ]
           }
@@ -61,7 +74,7 @@ Make it clean, structured, and persuasive.`
     const text =
       data.output?.[0]?.content?.[0]?.text ||
       data.output_text ||
-      "❌ No AI response.";
+      "❌ No response.";
 
     res.json({ result: text });
 
