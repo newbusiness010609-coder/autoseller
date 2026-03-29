@@ -34,24 +34,40 @@ app.post("/analyze", upload.single("image"), async (req, res) => {
             content: [
               {
                 type: "input_text",
-                text: `You are a top-tier e-commerce expert.
+                text: `You are a professional e-commerce expert.
 
-Analyze the product image and generate:
-- Title
-- Description
-- Estimated Price Range (EUR)
-- Target Audience
-- Marketing Angle
+Analyze the product image and generate a clean, structured result.
 
-Then give scores (/10) for:
-- Demand
-- Profit Potential
-- Competition
-- Virality Potential
+FORMAT STRICTLY LIKE THIS:
 
-Finally, suggest improvements or missing info that would help sell better. Ask follow-up questions ONLY if useful.
+=== PRODUCT OVERVIEW ===
+Write one short, clear paragraph in simple English describing the product.
 
-Be natural, insightful, and non-robotic.
+=== LISTING ===
+Title:
+Description:
+Estimated Price Range (EUR):
+Target Audience:
+Marketing Angle:
+
+=== SCORES (out of 10) ===
+Demand:
+Profit Potential:
+Competition:
+Virality Potential:
+
+=== IMPROVEMENTS ===
+Give short, actionable suggestions to improve selling.
+
+=== INSIGHTS ===
+Add any smart observations or opportunities.
+
+IMPORTANT:
+- Keep it clean and well spaced
+- Use simple English
+- Avoid long paragraphs
+- Be practical and realistic
+- Sound like a smart seller, not a robot`
 
 ${instructions}`
               },
