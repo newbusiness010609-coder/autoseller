@@ -10,14 +10,13 @@ app.use(express.json());
 app.post("/analyze", upload.single("image"), async (req, res) => {
   try {
     if (!process.env.OPENAI_API_KEY) {
-      return res.json({ result: "❌ API key missing." });
+      return res.json({ result: "API key missing." });
     }
 
     if (!req.file) {
-      return res.json({ result: "❌ Please upload an image." });
+      return res.json({ result: "Upload an image." });
     }
 
-    const instructions = req.body.instructions || "";
     const base64Image = req.file.buffer.toString("base64");
 
     const response = await fetch("https://api.openai.com/v1/responses", {
@@ -28,6 +27,7 @@ app.post("/analyze", upload.single("image"), async (req, res) => {
       },
       body: JSON.stringify({
         model: "gpt-4.1",
+        max_output_tokens: 500,
         input: [
           {
             role: "user",
@@ -36,40 +36,37 @@ app.post("/analyze", upload.single("image"), async (req, res) => {
                 type: "input_text",
                 text: `You are a professional e-commerce expert.
 
-Analyze the product image and generate a clean, structured result.
+Analyze the product image and return a VERY CLEAN and SHORT result.
 
-FORMAT STRICTLY LIKE THIS:
+FORMAT EXACTLY LIKE THIS:
 
-=== PRODUCT OVERVIEW ===
-Write one short, clear paragraph in simple English describing the product.
+=== OVERVIEW ===
+One short sentence describing the product.
 
 === LISTING ===
-Title:
-Description:
-Estimated Price Range (EUR):
-Target Audience:
-Marketing Angle:
+Title: ...
+Price: ...
+Audience: ...
+Angle: ...
 
-=== SCORES (out of 10) ===
-Demand:
-Profit Potential:
-Competition:
-Virality Potential:
+=== SCORES ===
+Demand: X/10
+Profit: X/10
+Competition: X/10
+Virality: X/10
 
 === IMPROVEMENTS ===
-Give short, actionable suggestions to improve selling.
+- Bullet point
+- Bullet point
 
 === INSIGHTS ===
-Add any smart observations or opportunities.
+One short smart observation.
 
 IMPORTANT:
-- Keep it clean and well spaced
-- Use simple English
-- Avoid long paragraphs
-- Be practical and realistic
-- Sound like a smart seller, not a robot`
-
-${instructions}`
+- Keep everything SHORT
+- Clean formatting
+- Realistic EU pricing
+- Not robotic`
               },
               {
                 type: "input_image",
@@ -83,21 +80,17 @@ ${instructions}`
 
     const data = await response.json();
 
-    if (data.error) {
-      return res.json({ result: "❌ " + data.error.message });
-    }
-
     const text =
       data.output?.[0]?.content?.[0]?.text ||
       data.output_text ||
-      "❌ No response.";
+      "No response.";
 
     res.json({ result: text });
 
   } catch (err) {
     console.log(err);
-    res.json({ result: "❌ Server error." });
+    res.json({ result: "Server error." });
   }
 });
 
-app.listen(3000, () => console.log("🚀 Server running"));
+app.listen(3000, () => console.log("🚀 Running"));
