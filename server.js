@@ -36,37 +36,47 @@ app.post("/analyze", upload.single("image"), async (req, res) => {
                 type: "input_text",
                 text: `You are a professional e-commerce expert.
 
-Analyze the product image and return a VERY CLEAN and SHORT result.
+Analyze the product image and respond in a CLEAN, VISUAL, and EASY TO READ format using emojis and spacing.
 
 FORMAT EXACTLY LIKE THIS:
 
-=== OVERVIEW ===
-One short sentence describing the product.
+📦 **PRODUCT OVERVIEW**
+Write one short, simple paragraph.
 
-=== LISTING ===
-Title: ...
-Price: ...
-Audience: ...
-Angle: ...
+💰 **LISTING**
+**Title:** ...
+**Estimated Price:** ...
+**Target Audience:** ...
+**Selling Angle:** ...
 
-=== SCORES ===
-Demand: X/10
-Profit: X/10
-Competition: X/10
-Virality: X/10
+📊 **SCORES**
+**Demand:** X/10 
+**Profit Potential:** X/10 
+**Competition:** X/10 
+**Virality:** X/10 
 
-=== IMPROVEMENTS ===
+🛠 **IMPROVEMENTS**
 - Bullet point
 - Bullet point
 
-=== INSIGHTS ===
-One short smart observation.
+🧠 **INSIGHTS**
+Short smart observation.
+
+❓ **SMART QUESTIONS**
+Ask 2 useful questions:
+- Ask what price user bought it for
+- Ask if they want to resell or keep
+
+⭐ **AUTOSELLER RATING**
+Give a final score out of 10 with a short reason.
 
 IMPORTANT:
-- Keep everything SHORT
-- Clean formatting
-- Realistic EU pricing
-- Not robotic`
+- Use emojis exactly like above
+- Use bold formatting with **
+- Keep spacing clean
+- Use simple English
+- Be practical and realistic
+- Base pricing on EU market (eBay, Amazon, Shopify)`
               },
               {
                 type: "input_image",
