@@ -131,6 +131,21 @@ function login() {
   alert("Login coming next step");
 }
 </script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBUswfX1bWIOhoPyqvwh9Pr6BBpAG8HrzM",
+  authDomain: "auto-seller-ai.firebaseapp.com",
+  projectId: "auto-seller-ai",
+  storageBucket: "auto-seller-ai.firebasestorage.app",
+  messagingSenderId: "1017318920085",
+  appId: "1:1017318920085:web:2c143da652c1a2c149709c"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+</script>
 </body>
 </html>
