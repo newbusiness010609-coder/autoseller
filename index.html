@@ -71,24 +71,27 @@ button {
 </div>
 
 <script>
-function formatText(text) {
-  return text
-    .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // bold
-    .replace(/\n/g, "<br>"); // spacing
-}
-
 async function send() {
   const file = document.getElementById("image").files[0];
+  const email = document.getElementById("email").value;
+  const instructions = document.getElementById("instructions").value;
+
+  if (!email) {
+    document.getElementById("result").innerText = "Enter your email.";
+    return;
+  }
 
   if (!file) {
-    document.getElementById("result").innerText = "Upload an image.";
+    document.getElementById("result").innerText = "Please upload an image.";
     return;
   }
 
   const formData = new FormData();
+  formData.append("email", email); // 🔥 THIS WAS MISSING
   formData.append("image", file);
+  formData.append("instructions", instructions);
 
-  document.getElementById("result").innerHTML = "Analyzing... ⏳";
+  document.getElementById("result").innerText = "Analyzing...";
 
   try {
     const res = await fetch("/analyze", {
@@ -97,11 +100,10 @@ async function send() {
     });
 
     const data = await res.json();
+    document.getElementById("result").innerText = data.result;
 
-    document.getElementById("result").innerHTML = formatText(data.result);
-
-  } catch {
-    document.getElementById("result").innerText = "Error.";
+  } catch (err) {
+    document.getElementById("result").innerText = "Something went wrong.";
   }
 }
 </script>
