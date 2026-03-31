@@ -9,22 +9,15 @@ app.use(express.json());
 
 app.post("/analyze", upload.single("image"), async (req, res) => {
   try {
-    // ✅ GET EMAIL
     const email = req.body.email;
 
-// 📧 EMAIL VALIDATION
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-if (!email || !emailRegex.test(email)) {
-  return res.json({ result: "❌ Please enter a valid email address." });
-}
-
-    // 🔥 NEW: LOG THE LEAD
-    console.log("NEW USER:", email);
-
-    if (!email) {
-      return res.json({ result: "Please enter your email." });
+    if (!email || !emailRegex.test(email)) {
+      return res.json({ result: "❌ Invalid user. Please login again." });
     }
+
+    console.log("USER:", email);
 
     if (!process.env.OPENAI_API_KEY) {
       return res.json({ result: "API key missing." });
@@ -51,49 +44,7 @@ if (!email || !emailRegex.test(email)) {
             content: [
               {
                 type: "input_text",
-                text: `You are a professional e-commerce expert.
-
-Analyze the product image and respond in a CLEAN, VISUAL, and EASY TO READ format using emojis and spacing.
-
-FORMAT EXACTLY LIKE THIS:
-
-📦 **PRODUCT OVERVIEW**
-Write one short, simple paragraph.
-
-💰 **LISTING**
-**Title:** ...
-**Estimated Price:** ...
-**Target Audience:** ...
-**Selling Angle:** ...
-
-📊 **SCORES**
-**Demand:** X/10
-**Profit Potential:** X/10
-**Competition:** X/10
-**Virality:** X/10
-
-🛠 **IMPROVEMENTS**
-- Bullet point
-- Bullet point
-
-🧠 **INSIGHTS**
-Short smart observation.
-
-❓ **SMART QUESTIONS**
-Ask 2 useful questions:
-- Ask what price user bought it for
-- Ask if they want to resell or keep
-
-⭐ **AUTOSELLER RATING**
-Give a final score out of 10 with a short reason.
-
-IMPORTANT:
-- Use emojis exactly like above
-- Use bold formatting with **
-- Keep spacing clean
-- Use simple English
-- Be practical and realistic
-- Base pricing on EU market (eBay, Amazon, Shopify)`
+                text: `You are a professional e-commerce expert...`
               },
               {
                 type: "input_image",
