@@ -9,8 +9,11 @@ app.use(express.json());
 
 app.post("/analyze", upload.single("image"), async (req, res) => {
   try {
-    // ✅ NEW: GET EMAIL
+    // ✅ GET EMAIL
     const email = req.body.email;
+
+    // 🔥 NEW: LOG THE LEAD
+    console.log("NEW USER:", email);
 
     if (!email) {
       return res.json({ result: "Please enter your email." });
