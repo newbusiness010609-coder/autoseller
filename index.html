@@ -8,7 +8,7 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: linear-gradient(135deg, #0f172a, #1e293b);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -39,22 +39,22 @@ button {
   padding: 15px;
   border: none;
   border-radius: 10px;
-  background: #4facfe;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: white;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
 }
 
 .google-btn {
-  background: #fff;
-  color: #444;
-  border: 1px solid #ccc;
+  background: white;
+  color: #111;
+  border: 1px solid #ddd;
 }
 
 #authMessage {
   margin-top: 10px;
   text-align: center;
-  font-size: 14px;
 }
 
 #result {
@@ -77,7 +77,6 @@ button {
 
   <button onclick="signUp()">Sign Up</button>
   <button onclick="login()">Login</button>
-
   <button class="google-btn" onclick="googleLogin()">Continue with Google</button>
 
   <div id="authMessage"></div>
@@ -87,7 +86,6 @@ button {
   <div class="container">
     <h1>AutoSeller AI</h1>
 
-    <input type="email" id="email" placeholder="Enter your email">
     <input type="file" id="image">
     <textarea id="instructions" placeholder="Optional instructions"></textarea>
 
@@ -98,6 +96,8 @@ button {
 </div>
 
 <script>
+let currentUserEmail = null;
+
 function showMessage(msg, color="red") {
   const box = document.getElementById("authMessage");
   box.innerText = msg;
@@ -123,24 +123,28 @@ function login() {
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => showMessage("Logged in 🚀", "green"))
-    .catch(err => showMessage("Wrong email or password"));
+    .catch(() => showMessage("Wrong email or password"));
 }
 
 function googleLogin() {
   const provider = new firebase.auth.GoogleAuthProvider();
 
   auth.signInWithPopup(provider)
-    .then(() => showMessage("Logged in with Google ✅", "green"))
-    .catch(err => showMessage("Google login failed"));
+    .then(result => {
+      showMessage("Logged in with Google ✅", "green");
+    })
+    .catch(err => {
+      console.log(err);
+      showMessage("Google login failed ❌");
+    });
 }
 
 auth.onAuthStateChanged(user => {
   if (user) {
+    currentUserEmail = user.email;
+
     document.getElementById("authBox").style.display = "none";
     document.getElementById("app").style.display = "block";
-
-    // auto-fill email
-    document.getElementById("email").value = user.email;
   } else {
     document.getElementById("authBox").style.display = "block";
     document.getElementById("app").style.display = "none";
@@ -149,7 +153,6 @@ auth.onAuthStateChanged(user => {
 
 async function send() {
   const file = document.getElementById("image").files[0];
-  const email = document.getElementById("email").value;
   const instructions = document.getElementById("instructions").value;
 
   if (!file) {
@@ -158,7 +161,7 @@ async function send() {
   }
 
   const formData = new FormData();
-  formData.append("email", email);
+  formData.append("email", currentUserEmail); // 🔥 AUTO USER
   formData.append("image", file);
   formData.append("instructions", instructions);
 
