@@ -59,15 +59,30 @@ button {
 
 <body>
 
-<div class="container">
-  <h1>AutoSeller AI</h1>
-<input type="email" id="email" placeholder="Enter your email" required>
-  <input type="file" id="image">
-  <textarea id="instructions" placeholder="Optional instructions"></textarea>
+<!-- 🔐 LOGIN BOX -->
+<div id="authBox" class="container">
+  <h1>Login / Sign Up</h1>
 
-  <button onclick="send()">Analyze 🚀</button>
+  <input type="email" id="authEmail" placeholder="Email"><br>
+  <input type="password" id="authPassword" placeholder="Password"><br>
 
-  <div id="result">Result will appear here...</div>
+  <button onclick="signUp()">Sign Up</button>
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- 🚀 APP (HIDDEN UNTIL LOGIN) -->
+<div id="app" style="display:none;">
+  <div class="container">
+    <h1>AutoSeller AI</h1>
+
+    <input type="email" id="email" placeholder="Enter your email" required>
+    <input type="file" id="image">
+    <textarea id="instructions" placeholder="Optional instructions"></textarea>
+
+    <button onclick="send()">Analyze 🚀</button>
+
+    <div id="result">Result will appear here...</div>
+  </div>
 </div>
 
 <script>
@@ -87,7 +102,7 @@ async function send() {
   }
 
   const formData = new FormData();
-  formData.append("email", email); // 🔥 THIS WAS MISSING
+  formData.append("email", email);
   formData.append("image", file);
   formData.append("instructions", instructions);
 
@@ -105,6 +120,15 @@ async function send() {
   } catch (err) {
     document.getElementById("result").innerText = "Something went wrong.";
   }
+}
+
+// 🔐 TEMP FUNCTIONS (WILL CONNECT NEXT)
+function signUp() {
+  alert("Signup coming next step");
+}
+
+function login() {
+  alert("Login coming next step");
 }
 </script>
 
