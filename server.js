@@ -9,6 +9,13 @@ app.use(express.json());
 
 app.post("/analyze", upload.single("image"), async (req, res) => {
   try {
+    // ✅ NEW: GET EMAIL
+    const email = req.body.email;
+
+    if (!email) {
+      return res.json({ result: "Please enter your email." });
+    }
+
     if (!process.env.OPENAI_API_KEY) {
       return res.json({ result: "API key missing." });
     }
@@ -50,10 +57,10 @@ Write one short, simple paragraph.
 **Selling Angle:** ...
 
 📊 **SCORES**
-**Demand:** X/10 
-**Profit Potential:** X/10 
-**Competition:** X/10 
-**Virality:** X/10 
+**Demand:** X/10
+**Profit Potential:** X/10
+**Competition:** X/10
+**Virality:** X/10
 
 🛠 **IMPROVEMENTS**
 - Bullet point
