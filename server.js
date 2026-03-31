@@ -12,6 +12,13 @@ app.post("/analyze", upload.single("image"), async (req, res) => {
     // ✅ GET EMAIL
     const email = req.body.email;
 
+// 📧 EMAIL VALIDATION
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!email || !emailRegex.test(email)) {
+  return res.json({ result: "❌ Please enter a valid email address." });
+}
+
     // 🔥 NEW: LOG THE LEAD
     console.log("NEW USER:", email);
 
